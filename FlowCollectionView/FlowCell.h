@@ -13,4 +13,9 @@
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) UIImageView *imageView;
 
+@property (nonatomic, assign, getter=isCardFront) BOOL cardFront;
+
+- (void)setCellToFrontStyleAtIndexPath:(NSIndexPath *)indexPath;
+- (void)setCellToBackStyleAtIndexPath:(NSIndexPath *)indexPath;
+
 @end

@@ -36,6 +36,8 @@ static NSString * const reuseIdentifier = @"Cell";
     flowLayout.minimumLineSpacing = 80;
     self.collectionView.collectionViewLayout = flowLayout;
     
+    // init the cell attributes;
+    self.flowCellAttributes = [NSMutableArray arrayWithObjects:@(YES), @(YES), @(YES), @(YES), @(YES), nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -63,27 +65,41 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
 #warning Incomplete implementation, return the number of items
-    return 5;
+    return self.flowCellAttributes.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FlowCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
     // Configure the cell
-    cell.label.text = [NSString stringWithFormat:@"%ld", indexPath.item];
-    cell.contentView.backgroundColor = UIColor.whiteColor;
+    cell.cardFront = [self.flowCellAttributes[indexPath.item] boolValue];
+    if (cell.isCardFront) {
+        [cell setCellToFrontStyleAtIndexPath:indexPath];
+    } else {
+        [cell setCellToBackStyleAtIndexPath:indexPath];
+    }
     
     return cell;
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    
-}
-
-
-
 #pragma mark <UICollectionViewDelegate>
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    FlowCell *selectedCell = (FlowCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    [UIView transitionWithView:selectedCell
+                      duration:0.5
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                        if (selectedCell.isCardFront) {
+                            [selectedCell setCellToBackStyleAtIndexPath:indexPath];
+                            self.flowCellAttributes[indexPath.item] = @(NO);
+                        } else {
+                            [selectedCell setCellToFrontStyleAtIndexPath:indexPath];
+                            self.flowCellAttributes[indexPath.item] = @(YES);
+                        }
+                    } completion:NULL];
+}
 
 /*
 // Uncomment this method to specify if the specified item should be highlighted during tracking
@@ -93,7 +109,7 @@ static NSString * const reuseIdentifier = @"Cell";
 */
 
 /*
-// Uncomment this method to specify if the specified item should be selected
+ Uncomment this method to specify if the specified item should be selected
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }

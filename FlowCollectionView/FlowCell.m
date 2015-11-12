@@ -18,6 +18,8 @@
         self.label.textAlignment = NSTextAlignmentCenter;
         self.label.font = [UIFont systemFontOfSize:32];
         
+        self.cardFront = YES;
+        
         self.contentView.layer.cornerRadius = 10.0;
         self.contentView.layer.masksToBounds = YES;
     }
@@ -33,5 +35,20 @@
     }
     return _label;
 }
+
+- (void)setCellToFrontStyleAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.label.text = [NSString stringWithFormat:@"%ld", indexPath.item];
+    self.contentView.backgroundColor = UIColor.whiteColor;
+    self.cardFront = YES;
+}
+
+- (void)setCellToBackStyleAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.label.text = [NSString stringWithFormat:@"%ld in back", indexPath.item];
+    self.contentView.backgroundColor = UIColor.whiteColor;
+    self.cardFront = NO;
+}
+
 
 @end

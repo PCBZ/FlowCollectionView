@@ -10,4 +10,6 @@
 
 @interface FlowViewController : UICollectionViewController
 
+@property (nonatomic, strong) NSMutableArray *flowCellAttributes;
+
 @end
